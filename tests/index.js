@@ -52,7 +52,7 @@ describe('css tag', () => {
     expect(css`padding: 20px   10px   30px  40px`).to.deep.equal({ padding: '20px 10px 30px 40px' });
   });
 
-  it.only('should ignore brackets', () => {
+  it('should ignore brackets', () => {
     expect(css`{
       color: white;
       background: black;
