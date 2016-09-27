@@ -1,0 +1,30 @@
+{
+  "name": "css-template",
+  "version": "0.0.1",
+  "description": "convert css string to style object. Useful for inline styling in React",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src/index.js --presets babel-preset-es2015 > dist/index.js",
+    "test": "mocha tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tungv/css-template.git"
+  },
+  "keywords": [
+    "css",
+    "template",
+    "react",
+    "styling"
+  ],
+  "author": "Tung Vu <me@tungv.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tungv/css-template/issues"
+  },
+  "homepage": "https://github.com/tungv/css-template#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.14.0",
+    "chai": "^3.5.0"
+  }
+}
