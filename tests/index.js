@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const css = require('../index');
+const css = require('../src/index');
 
 describe('css tag', () => {
   it('should work with single rule', () => {
@@ -50,5 +50,12 @@ describe('css tag', () => {
 
   it('should remove extra spaces in between values', () => {
     expect(css`padding: 20px   10px   30px  40px`).to.deep.equal({ padding: '20px 10px 30px 40px' });
+  });
+
+  it.only('should ignore brackets', () => {
+    expect(css`{
+      color: white;
+      background: black;
+    }`).to.deep.equal({ color: 'white', background: 'black' });
   });
 });

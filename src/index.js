@@ -8,6 +8,7 @@ const normalizeAttr = attr => toCamel(attr.trim());
 const normalizeValue = value => value.trim().replace(/\s+/g, ' ');
 
 const getAttrAndValue = rule => {
+  console.log('rule', rule);
   const trimmed = rule.trim();
   if (!trimmed) {
     return {};
@@ -16,10 +17,18 @@ const getAttrAndValue = rule => {
   return { [normalizeAttr(attr)]: normalizeValue(value) };
 };
 
+const withoutOpeningBracket = string => {
+  return string.replace(/^(\s|\{)*/, '');
+}
+
+const withoutClosingBracket = string => {
+  return string.replace(/(\s|\})*$/, '');
+}
+
 const interpolate = (strings, params) =>
-  params.reduce((acc, param, index) => {
+  withoutClosingBracket(params.reduce((acc, param, index) => {
     return acc + param + strings[index + 1];
-  }, strings[0]).split(';');
+  }, withoutOpeningBracket(strings[0]))).split(';');
 
 
 module.exports = (strings, ...params) => {
