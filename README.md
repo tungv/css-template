@@ -97,7 +97,7 @@ const styles = {
 
   ```js
     const bigFont = css`font-size: 200%`
-    const underlined = css`text-decorator: underline`
+    const underlined = css`text-decoration: underline`
 
     const myStyle = css`{
       composes: ${bigFont};
