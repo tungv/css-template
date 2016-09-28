@@ -1,6 +1,6 @@
 {
   "name": "css-template",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "convert css string to style object. Useful for inline styling in React",
   "main": "dist/index.js",
   "scripts": {
