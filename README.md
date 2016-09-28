@@ -20,6 +20,7 @@ const styles = {
 With `css-template`, those times are gone! Instead of writing this:
 
 ```js
+// THIS IS BAD FOR YOUR EYES
 const styles = {
   title: {
     marginTop: '10px',
@@ -39,6 +40,7 @@ const styles = {
 you can write something like this
 
 ```js
+// THIS IS BETTER
 const styles = {
   title: css`{
     margin-top: 10px;
