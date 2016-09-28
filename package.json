@@ -4,7 +4,7 @@
   "description": "convert css string to style object. Useful for inline styling in React",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src/index.js --presets babel-preset-es2015 > dist/index.js",
+    "build": "babel src/index.js --presets babel-preset-es2015 --plugins babel-plugin-transform-remove-console > dist/index.js",
     "test": "mocha tests"
   },
   "repository": {
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/tungv/css-template#readme",
   "devDependencies": {
+    "babel-plugin-transform-remove-console": "^6.8.0",
     "babel-preset-es2015": "^6.14.0",
     "chai": "^3.5.0"
   }
