@@ -96,7 +96,7 @@ describe('css tag', () => {
     );
   });
 
-  it.skip('should handle composes', () => {
+  it('should handle composes as the first rule', () => {
     const style = { padding: '6px', color: 'red' };
     assert.deepEqual(css`{
       composes: ${style};
@@ -105,6 +105,19 @@ describe('css tag', () => {
     }`, {
       color: 'red',
       padding: '10px',
+      margin: '10px'
+    });
+  });
+
+  it('should handle composes as a non-initial rule', () => {
+    const style = { padding: '6px', color: 'red' };
+    assert.deepEqual(css`{
+      padding: 10px;
+      composes: ${style};
+      margin: 10px;
+    }`, {
+      color: 'red',
+      padding: '6px',
       margin: '10px'
     });
   });

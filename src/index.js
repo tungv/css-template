@@ -37,14 +37,24 @@ const handleLiteral = literal => {
     prefix,
     suffix,
   };
-  // console.log('-----------\nparse result\n  %s\n  ==>\n  %j\n----------', literal, ret);
+  console.log(
+    '<----------\nparse input\n  %s\n  result ==>\n  %j\n---------->\n\n',
+    literal, ret
+  );
   return ret;
 }
 
+const isComposes = str => str.match(/(^|\s)composes\s*:\s*$/);
+const parseComposes = param => ({
+  rules: Object.keys(param).map(key => [key, param[key]]),
+  prefix: '',
+  suffix: '',
+});
+
 const reduce = (current, param, nextLiteral) => {
-  // console.log('current', current);
-  // console.log('param', param);
-  // console.log('nextLiteral', nextLiteral);
+  console.log('current', current);
+  console.log('param', param);
+  console.log('nextLiteral', nextLiteral);
 
   const { rules, prefix, suffix } = current;
   const next = handleLiteral(nextLiteral);
@@ -54,7 +64,13 @@ const reduce = (current, param, nextLiteral) => {
     throw new Error('feature: [params as an attr] is not implemented yet')
   }
 
-  const interpolated = handleLiteral([suffix, param, next.prefix].join(' '));
+  if (isComposes(suffix)) {
+    const rules = Object.keys(param).map(key => [key, param[key]]);
+  }
+  const interpolated = isComposes(suffix) ?
+    (console.log('composes'), parseComposes(param)) :
+    handleLiteral([suffix, param, next.prefix].join(' '));
+
   // console.log('interpolated', interpolated);
 
   return {
@@ -86,6 +102,6 @@ module.exports = (strings, ...params) => {
     }
   }
 
-  // console.log('final:', reduced.rules);
+  console.log('final:', reduced);
   return convertToObject(reduced.rules);
 };
