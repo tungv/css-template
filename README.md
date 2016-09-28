@@ -55,6 +55,59 @@ const styles = {
 };
 ```
 
+# Supported Features
+
+- translate snake-case to camelCase
+
+  ```js
+    css`margin-top: 20px` // will be translated to { marginTop: '20px' }
+  ```
+
+- multiple lines with optional brackets for better visuals
+
+  ```js
+    css`{
+      padding: 10px;
+      margin: 10px;
+    }`
+
+    // is equivalent to
+    css`
+      padding: 10px;
+      margin: 10px;
+    `
+  ```
+
+- optional final semicolon
+
+  ```js
+    css`padding: 10px`
+
+    // is equivalent to
+    css`padding: 10px;`
+  ```
+
+- multiple rules in one line
+
+  ```js
+    css`padding: 10px; margin: 10px`
+  ```
+
+- compose other style objects
+
+  ```js
+    const bigFont = css`font-size: 200%`
+    const underlined = css`text-decorator: underline`
+
+    const myStyle = css`{
+      composes: ${bigFont};
+      composes: ${underlined};
+      padding: 10px;
+      margin: 10px;
+    }`
+
+  ```
+
 # Installation
 
 ```bash
@@ -71,24 +124,24 @@ const BACKGROUND_MAIN = '#336699';
 const awesomeStyles = css`font-size: 200%`;
 
 const styles = {
-  header: css`
+  header: css`{
     padding: 10px 0 20px 10px;
     text-align: center;
-  `,
-  main: css`
+  }`,
+  main: css`{
     composes: ${awesomeStyles};
     color: ${COLOR_MAIN};
     background-color: ${BACKGROUND_MAIN};
-  `
+  }`
 };
 
 const MyComponent = (props) => (
   <div>
     <div style={styles.header}>
-    {props.header}
+      {props.header}
     </div>
     <div style={styles.main}>
-    {props.main}
+      {props.main}
     </div>
   </div>
 );
