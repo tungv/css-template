@@ -1,3 +1,5 @@
+const REGEX_RULE = /([\w\-]+)\s*:\s*(\w[\w\-\s]+)\;/g;
+
 const toCamel = snake =>
   snake.replace(
     /\-\w/g,
@@ -5,31 +7,85 @@ const toCamel = snake =>
   );
 
 const normalizeAttr = attr => toCamel(attr.trim());
-const normalizeValue = value => value.trim().replace(/\s+/g, ' ');
 
-const getAttrAndValue = rule => {
-  const trimmed = rule.trim();
-  if (!trimmed) {
-    return {};
+const normalizeValue = value =>
+  value.replace(/(\s+)/g, ' ') // remove extra spaces
+
+const addTrailingCharacter = char => str => str[str.length - 1] === char ? str : (str + char);
+
+const handleLiteral = literal => {
+  let match;
+  let indexStart = -1;
+  let indexEnd = 0;
+  const rules = [];
+
+  while(match = REGEX_RULE.exec(literal)) {
+    const [rule, attr, value] = match;
+    // console.log(' >>>> rule', rule);
+    if (!indexStart) {
+      indexStart = match.index;
+    }
+    indexEnd = match.index + rule.length;
+    rules.push([normalizeAttr(attr), normalizeValue(value)]);
   }
-  const [attr, value] = trimmed.split(':');
-  return { [normalizeAttr(attr)]: normalizeValue(value) };
-};
 
-const withoutOpeningBracket = string => string.replace(/^(\s|\{)*/, '');
+  const prefix = literal.substr(0, indexStart).trim();
+  const suffix = literal.slice(indexEnd).trim();
 
-const withoutClosingBracket = string => string.replace(/(\s|\})*$/, '');
+  const ret = {
+    rules,
+    prefix,
+    suffix,
+  };
+  // console.log('-----------\nparse result\n  %s\n  ==>\n  %j\n----------', literal, ret);
+  return ret;
+}
 
-const interpolate = (strings, params) =>
-  withoutClosingBracket(
-    params.reduce(
-      (acc, param, index) => acc + param + strings[index + 1],
-      withoutOpeningBracket(strings[0])
-    )
-  ).split(';');
+const reduce = (current, param, nextLiteral) => {
+  // console.log('current', current);
+  // console.log('param', param);
+  // console.log('nextLiteral', nextLiteral);
+
+  const { rules, prefix, suffix } = current;
+  const next = handleLiteral(nextLiteral);
+
+  if (!suffix) {
+    console.error('params as an attr');
+    throw new Error('feature: [params as an attr] is not implemented yet')
+  }
+
+  const interpolated = handleLiteral([suffix, param, next.prefix].join(' '));
+  // console.log('interpolated', interpolated);
+
+  return {
+    rules: [].concat(rules, interpolated.rules, next.rules),
+    suffix: interpolated.suffix + next.suffix
+  };
+}
+
+convertToObject = (array) => array.reduce(
+  (current, pairs) => (current[pairs[0]] = pairs[1], current), {}
+);
 
 module.exports = (strings, ...params) => {
-  const originalRules = interpolate(strings, params);
-  const rules = originalRules.map(getAttrAndValue);
-  return Object.assign(...rules);
+  const reduced = params.reduce(
+    (acc, param, index) => reduce(acc, param, strings[index + 1]),
+    handleLiteral(strings[0])
+  );
+
+  // console.log('\n\nreduced\n\n', reduced);
+  if (reduced.prefix && reduced.prefix !== '{') {
+    throw new Error(`unexpected starting sequence of "${reduced.prefix}"`);
+  }
+
+  if (reduced.suffix && reduced.suffix !== '}') {
+    const finalRule = handleLiteral(addTrailingCharacter(';')(reduced.suffix));
+    reduced.rules.push(...finalRule.rules);
+    if (finalRule.suffix) {
+      throw new Error(`unexpected ending sequence of ${finalRule.suffix}`);
+    }
+  }
+
+  // console.log('final:', reduced.rules);
+  return convertToObject(reduced.rules);
 };

@@ -1,61 +1,101 @@
-const { expect } = require('chai');
+const { assert } = require('chai');
 const css = require('../src/index');
 
 describe('css tag', () => {
-  it('should work with single rule', () => {
-    expect(
-      css`padding: 10px`
-    ).to.deep.equal({
-      padding: '10px'
-    })
+  it('should work with single rule without `;`', () => {
+    assert.deepEqual(css`padding: 10px`, { padding: '10px' });
   });
 
-  it('should work with multiple rules', () => {
-    expect(
-      css`
-        padding: 10px;
-        margin: 20px;
-      `
-    ).to.deep.equal({
+  it('should work with single rule with `;`', () => {
+    assert.deepEqual(css`padding: 10px;`, { padding: '10px' });
+  });
+
+  it('should work with multiple rules without final `;`', () => {
+    assert.deepEqual(css`padding: 10px; margin: 20px`, {
+      padding: '10px',
+      margin: '20px'
+    });
+  });
+
+  it('should work with multiple rules with final `;`', () => {
+    assert.deepEqual(css`padding: 10px; margin: 20px;`, {
+      padding: '10px',
+      margin: '20px'
+    });
+  });
+
+  it('should work with multiple lines without final `;`', () => {
+    assert.deepEqual(css`
+      padding: 10px;
+      margin: 20px
+    `, {
+      padding: '10px',
+      margin: '20px'
+    });
+  });
+
+  it('should work with multiple lines with final `;`', () => {
+    assert.deepEqual(css`
+      padding: 10px;
+      margin: 20px;
+    `, {
       padding: '10px',
       margin: '20px'
     });
   });
 
   it('should convert snakecase to camelCase', () => {
-    expect(
-      css`
-        padding-top: 10px;
-        margin-bottom-or-longer: 20px;
-      `
-    ).to.deep.equal({
-      paddingTop: '10px',
-      marginBottomOrLonger: '20px'
-    });
+    assert.deepEqual(
+      css`padding-top: 10px; margin-bottom-or-longer: 20px;`, {
+        paddingTop: '10px',
+        marginBottomOrLonger: '20px'
+      });
   });
 
-  it('should convert variable', () => {
-    expect(
-      css`
-        padding: ${100 * 2}px;
-      `
-    ).to.deep.equal({
-      padding: '200px'
-    })
+  it('should convert single-value variable', () => {
+    assert.deepEqual(css`padding: ${100 * 2}px;`, { padding: '200px' });
+  });
+
+  it('should convert multiple-value variable', () => {
+    assert.deepEqual(css`padding: 10px ${100 * 2}px;`, { padding: '10px 200px' });
+    assert.deepEqual(css`padding: ${100 * 2}px 10px;`, { padding: '200px 10px' });
   });
 
   it('should work with extra spaces', () => {
-    expect(css`padding  :   200px    `).to.deep.equal({ padding: '200px' });
+    assert.deepEqual(css`padding  :   200px    `, { padding: '200px' });
   });
 
   it('should remove extra spaces in between values', () => {
-    expect(css`padding: 20px   10px   30px  40px`).to.deep.equal({ padding: '20px 10px 30px 40px' });
+    assert.deepEqual(css`padding: 20px   10px   30px  40px`, { padding: '20px 10px 30px 40px' });
   });
 
-  it('should ignore brackets', () => {
-    expect(css`{
-      color: white;
-      background: black;
-    }`).to.deep.equal({ color: 'white', background: 'black' });
+  it('should ignore single-line bounding brackets', () => {
+    assert.deepEqual(
+      css`{ color: white; background: black; }`,
+      { color: 'white', background: 'black' }
+    );
+  });
+
+  it('should ignore multiple-line bounding brackets', () => {
+    assert.deepEqual(
+      css`{
+        color: white;
+        background: black;
+      }`,
+      { color: 'white', background: 'black' }
+    );
+  });
+
+  it.skip('should handle composes', () => {
+    const style = { padding: '6px', color: 'red' };
+    assert.deepEqual(css`{
+      composes: ${style};
+      padding: 10px;
+      margin: 10px;
+    }`, {
+      color: 'red',
+      padding: '10px',
+      margin: '10px'
+    });
   });
 });
