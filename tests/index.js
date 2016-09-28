@@ -10,6 +10,16 @@ describe('css tag', () => {
     assert.deepEqual(css`padding: 10px;`, { padding: '10px' });
   });
 
+  it('should work with `%` unit', () => {
+    assert.deepEqual(css`width: 100%`, { width: '100%' });
+  });
+
+  it('should work with rgba()', () => {
+    assert.deepEqual(css`color: rgba(100, 200, 150, 0.1)`, {
+      color: 'rgba(100, 200, 150, 0.1)'
+    });
+  });
+
   it('should work with multiple rules without final `;`', () => {
     assert.deepEqual(css`padding: 10px; margin: 20px`, {
       padding: '10px',
@@ -79,10 +89,10 @@ describe('css tag', () => {
   it('should ignore multiple-line bounding brackets', () => {
     assert.deepEqual(
       css`{
-        color: white;
-        background: black;
+        width: 100%;
+        margin: 0 10px;
       }`,
-      { color: 'white', background: 'black' }
+      { width: '100%', margin: '0 10px' }
     );
   });
 

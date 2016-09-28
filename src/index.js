@@ -1,4 +1,4 @@
-const REGEX_RULE = /([\w\-]+)\s*:\s*(\w[\w\-\s]+)\;/g;
+const REGEX_RULE = /([\w\-]+)\s*:\s*([^;]+)\;/g;
 
 const toCamel = snake =>
   snake.replace(
