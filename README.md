@@ -6,11 +6,11 @@ To use inline styles in React, you often find yourself writing this type of code
 ```js
 const styles = {
   title: {
-    marginTop: '10px',
-    //    ^    ^    ^^
-    //    |    |    ||___ annoying trailing comma
-    //    |    |____|____ annoying JS quotes
-    //    |______________ annoying camel case
+    borderBottomLeftRadius: '10px',
+    //    ^     ^   ^       ^    ^^
+    //    |     |   |       |    ||___ annoying trailing comma
+    //    |     |   |       |____|____ annoying JS quotes
+    //    |_____|___|_________________ annoying camel case
     //
     //    (╯°□°）╯︵ ┻━┻ I WANT CSS BACK!!!
   }
@@ -23,14 +23,15 @@ With `css-template`, those times are gone! Instead of writing this:
 const styles = {
   title: {
     marginTop: '10px',
-    fontSize: '18px',
-    lineHeight: '25px',
-    fontWeight: '300',
+    fontSize: '120%',
+    lineHeight: '1.5',
     textAlign: 'center',
+    backgroundColor: 'rgba(100, 255, 100, 0.7)',
   },
   footer: {
-    text-align: 'right',
-    margin-top: '20px',
+    width: 'calc(100% - 16px)',
+    textAlign: 'right',
+    marginTop: '20px',
   }
 };
 ```
@@ -41,12 +42,13 @@ you can write something like this
 const styles = {
   title: css`{
     margin-top: 10px;
-    font-size: 18px;
-    line-height: 25px;
-    font-weight: 300;
+    font-size: 120%;
+    line-height: 1.5;
     text-align: center;
+    background-color: rgba(100, 255, 100, 0.7);
   }`,
   footer: css`{
+    width: calc(100% - 16px);
     text-align: right;
     margin-top: 20px;
   }`,
