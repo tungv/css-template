@@ -63,7 +63,7 @@ const reduce = (current, param, nextLiteral) => {
   };
 }
 
-convertToObject = (array) => array.reduce(
+const convertToObject = (array) => array.reduce(
   (current, pairs) => (current[pairs[0]] = pairs[1], current), {}
 );
 
