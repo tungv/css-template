@@ -75,13 +75,11 @@ const styles = {
     padding: 10px 0 20px 10px;
     text-align: center;
   `,
-  main: {
-    ...awesomeStyles,
-    ...css`
-      color: ${COLOR_MAIN};
-      background-color: ${BACKGROUND_MAIN};
-    `
-  }
+  main: css`
+    composes: ${awesomeStyles};
+    color: ${COLOR_MAIN};
+    background-color: ${BACKGROUND_MAIN};
+  `
 };
 
 const MyComponent = (props) => (
@@ -98,6 +96,6 @@ const MyComponent = (props) => (
 
 # ROADMAP
 
-- [ ] `composes: ${otherStyles};` just like postcss composes feature
+- [x] `composes: ${otherStyles};` just like postcss composes feature
 - [ ] optional auto-prefixer
 - [ ] spread numeric values like `padding: ${[10, 20, 0, 10]}px;`
