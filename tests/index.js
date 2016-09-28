@@ -89,8 +89,8 @@ describe('css tag', () => {
   it('should ignore multiple-line bounding brackets', () => {
     assert.deepEqual(
       css`{
-        width: 100%;
         margin: 0 10px;
+        width: 100%;
       }`,
       { width: '100%', margin: '0 10px' }
     );

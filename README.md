@@ -1,6 +1,58 @@
 # css-template
 Reduce context-switching when defining `style` in React Component.
 
+To use inline styles in React, you often find yourself writing this type of code:
+
+```js
+const styles = {
+  title: {
+    marginTop: '10px',
+    //    ^    ^    ^^
+    //    |    |    ||___ annoying trailing comma
+    //    |    |____|____ annoying JS quotes
+    //    |______________ annoying camel case
+    //
+    //    (╯°□°）╯︵ ┻━┻ I WANT CSS BACK!!!
+  }
+}
+```
+
+With `css-template`, those times are gone! Instead of writing this:
+
+```js
+const styles = {
+  title: {
+    marginTop: '10px',
+    fontSize: '18px',
+    lineHeight: '25px',
+    fontWeight: '300',
+    textAlign: 'center',
+  },
+  footer: {
+    text-align: 'right',
+    margin-top: '20px',
+  }
+};
+```
+
+you can write something like this
+
+```js
+const styles = {
+  title: css`{
+    margin-top: 10px;
+    font-size: 18px;
+    line-height: 25px;
+    font-weight: 300;
+    text-align: center;
+  }`,
+  footer: css`{
+    text-align: right;
+    margin-top: 20px;
+  }`,
+};
+```
+
 # Installation
 
 ```bash
@@ -41,3 +93,9 @@ const MyComponent = (props) => (
   </div>
 );
 ```
+
+# ROADMAP
+
+- [ ] `composes: ${otherStyles};` just like postcss composes feature
+- [ ] optional auto-prefixer
+- [ ] spread numeric values like `padding: ${[10, 20, 0, 10]}px;`
