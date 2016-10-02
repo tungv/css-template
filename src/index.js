@@ -21,7 +21,6 @@ const handleLiteral = literal => {
 
   while(match = REGEX_RULE.exec(literal)) {
     const [rule, attr, value] = match;
-    // console.log(' >>>> rule', rule);
     if (!indexStart) {
       indexStart = match.index;
     }
@@ -37,10 +36,7 @@ const handleLiteral = literal => {
     prefix,
     suffix,
   };
-  console.log(
-    '<----------\nparse input\n  %s\n  result ==>\n  %j\n---------->\n\n',
-    literal, ret
-  );
+
   return ret;
 }
 
@@ -52,9 +48,6 @@ const parseComposes = param => ({
 });
 
 const reduce = (current, param, nextLiteral) => {
-  console.log('current', current);
-  console.log('param', param);
-  console.log('nextLiteral', nextLiteral);
 
   const { rules, prefix, suffix } = current;
   const next = handleLiteral(nextLiteral);
@@ -68,10 +61,9 @@ const reduce = (current, param, nextLiteral) => {
     const rules = Object.keys(param).map(key => [key, param[key]]);
   }
   const interpolated = isComposes(suffix) ?
-    (console.log('composes'), parseComposes(param)) :
+    parseComposes(param) :
     handleLiteral([suffix, param, next.prefix].join(' '));
 
-  // console.log('interpolated', interpolated);
 
   return {
     rules: [].concat(rules, interpolated.rules, next.rules),
@@ -89,7 +81,6 @@ module.exports = (strings, ...params) => {
     handleLiteral(strings[0])
   );
 
-  // console.log('\n\nreduced\n\n', reduced);
   if (reduced.prefix && reduced.prefix !== '{') {
     throw new Error(`unexpected starting sequence of "${reduced.prefix}"`);
   }
@@ -102,6 +93,5 @@ module.exports = (strings, ...params) => {
     }
   }
 
-  console.log('final:', reduced);
   return convertToObject(reduced.rules);
 };
