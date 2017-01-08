@@ -121,4 +121,31 @@ describe('css tag', () => {
       margin: '10px'
     });
   });
+
+  // REGRESSIONS
+  it('REGRESSIONS#1', () => {
+    const backgroundUrl = '/static/media/background.17f52263.png';
+    const style = css`{
+      background-image: url("${backgroundUrl}");
+    }`;
+
+
+    assert.deepEqual(style, {
+      backgroundImage: 'url(" /static/media/background.17f52263.png")',
+    });
+  });
+
+  it('REGRESSIONS#2', () => {
+    const backgroundUrl = '/static/media/background.17f52263.png';
+    const style = css`
+      background-image: url("${backgroundUrl}");
+      height: 100%;
+    `;
+
+
+    assert.deepEqual(style, {
+      height: '100%',
+      backgroundImage: 'url(" /static/media/background.17f52263.png ")',
+    });
+  });
 });

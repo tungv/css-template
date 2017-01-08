@@ -1,4 +1,4 @@
-const REGEX_RULE = /([\w\-]+)\s*:\s*([^;]+)\;/g;
+const REGEX_RULE = /([\w\-]+)\s*:\s*([^\;]+)\;/g;
 
 const toCamel = snake =>
   snake.replace(
@@ -14,6 +14,7 @@ const normalizeValue = value =>
 const addTrailingCharacter = char => str => str[str.length - 1] === char ? str : (str + char);
 
 const handleLiteral = literal => {
+  // literal = literal.split('\n').join('').replace(/[\s\t]+/g, ' ');
   let match;
   let indexStart = -1;
   let indexEnd = 0;
@@ -21,12 +22,13 @@ const handleLiteral = literal => {
 
   while(match = REGEX_RULE.exec(literal)) {
     const [rule, attr, value] = match;
-    if (!indexStart) {
+    if (indexStart === -1) {
       indexStart = match.index;
     }
     indexEnd = match.index + rule.length;
     rules.push([normalizeAttr(attr), normalizeValue(value)]);
   }
+
 
   const prefix = literal.substr(0, indexStart).trim();
   const suffix = literal.slice(indexEnd).trim();
@@ -53,13 +55,14 @@ const reduce = (current, param, nextLiteral) => {
   const next = handleLiteral(nextLiteral);
 
   if (!suffix) {
-    console.error('params as an attr');
     throw new Error('feature: [params as an attr] is not implemented yet')
   }
 
   if (isComposes(suffix)) {
     const rules = Object.keys(param).map(key => [key, param[key]]);
   }
+
+
   const interpolated = isComposes(suffix) ?
     parseComposes(param) :
     handleLiteral([suffix, param, next.prefix].join(' '));
@@ -88,7 +91,7 @@ module.exports = (strings, ...params) => {
   if (reduced.suffix && reduced.suffix !== '}') {
     const finalRule = handleLiteral(addTrailingCharacter(';')(reduced.suffix));
     reduced.rules.push(...finalRule.rules);
-    if (finalRule.suffix) {
+    if (finalRule.suffix && finalRule.suffix[0] !== '}') {
       throw new Error(`unexpected ending sequence of ${finalRule.suffix}`);
     }
   }
