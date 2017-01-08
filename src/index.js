@@ -9,12 +9,11 @@ const toCamel = snake =>
 const normalizeAttr = attr => toCamel(attr.trim());
 
 const normalizeValue = value =>
-  value.replace(/(\s+)/g, ' ') // remove extra spaces
+  value.replace(/(\s+)/g, ' ').trim() // remove extra spaces
 
 const addTrailingCharacter = char => str => str[str.length - 1] === char ? str : (str + char);
 
 const handleLiteral = literal => {
-  // literal = literal.split('\n').join('').replace(/[\s\t]+/g, ' ');
   let match;
   let indexStart = -1;
   let indexEnd = 0;
@@ -31,7 +30,7 @@ const handleLiteral = literal => {
 
 
   const prefix = literal.substr(0, indexStart).trim();
-  const suffix = literal.slice(indexEnd).trim();
+  const suffix = literal.slice(indexEnd).trimLeft();
 
   const ret = {
     rules,
@@ -62,10 +61,9 @@ const reduce = (current, param, nextLiteral) => {
     const rules = Object.keys(param).map(key => [key, param[key]]);
   }
 
-
   const interpolated = isComposes(suffix) ?
     parseComposes(param) :
-    handleLiteral([suffix, param, next.prefix].join(' '));
+    handleLiteral([suffix, param, next.prefix].join(''));
 
 
   return {

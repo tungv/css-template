@@ -131,7 +131,7 @@ describe('css tag', () => {
 
 
     assert.deepEqual(style, {
-      backgroundImage: 'url(" /static/media/background.17f52263.png")',
+      backgroundImage: 'url("/static/media/background.17f52263.png")',
     });
   });
 
@@ -145,7 +145,7 @@ describe('css tag', () => {
 
     assert.deepEqual(style, {
       height: '100%',
-      backgroundImage: 'url(" /static/media/background.17f52263.png ")',
+      backgroundImage: 'url("/static/media/background.17f52263.png")',
     });
   });
 });
